@@ -21,8 +21,10 @@ io.on('connection', (socket) => {
    console.log('user disconnect from server'); 
    });
    
-   socket.on('createMessage', (message) => {
-    socket.broadcast.emit('newMessage', generateMessage(message.from, message.text));
+   socket.on('createMessage', (message, callback) => {
+       socket.emit('newMessage', generateMessage(message.from, message.text));
+       socket.broadcast.emit('newMessage', generateMessage(message.from, message.text));
+       callback('this is from server side');
    });
 });
 
