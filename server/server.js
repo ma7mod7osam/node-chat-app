@@ -5,7 +5,7 @@ const app = express();
 const socketIO = require("socket.io");
 const publicPath = path.join(__dirname, '../public');
 
-var {generateMessage} = require("./utils/message");
+var {generateMessage, generateLocationMessage} = require("./utils/message");
 var port = process.env.PORT || 3000;
 app.use(express.static(publicPath));
 var server = http.createServer(app);
@@ -22,10 +22,14 @@ io.on('connection', (socket) => {
    });
    
    socket.on('createMessage', (message, callback) => {
-       socket.emit('newMessage', generateMessage(message.from, message.text));
-       socket.broadcast.emit('newMessage', generateMessage(message.from, message.text));
+       io.emit('newMessage', generateMessage(message.from, message.text));
        callback('this is from server side');
    });
+   
+   socket.on('createLocationMessage', (coords) => {
+      io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude)); 
+   });
+   
 });
 
 
