@@ -1,28 +1,31 @@
 
 var socket = io();
             
-    socket.on('connect', function () {
-        console.log('connect to server');
-    });
+    // socket.on('connect', function () {
+    //     console.log('connect to server');
+    // });
     
-    socket.on('disconnect', function () {
-       console.log('disconnected from server'); 
-    });
+    // socket.on('disconnect', function () {
+    //   console.log('disconnected from server'); 
+    // });
 
     socket.on('newMessage', (message) => {
+        var formattedTime = moment(message.createdAt).format('h:mm a');
       console.log(`from : ${message.from} >> ${message.text} >>> ${message.createdAt}`);
       var li = $('<li></li>');
-      li.text(`${message.from} : ${message.text} `);
+      li.text(`${message.from} : ${message.text}       ${formattedTime}`);
       $('#messages').append(li);
    });
    
    socket.on('newLocationMessage', (message) => {
+       var formattedTime = moment(message.createdAt).format('h:mm a');
       var li = $('<li></li>');
-      var a = $('<a target="_blank">My Current Location</a>');
+      var a = $(`<a target="_blank">My Current Location</a>`);
       
       li.text(`${message.from}: `);
       a.attr('href', message.url);
       li.append(a);
+      li.append(`   ${formattedTime}`);
       $('#messages').append(li);
       
    });
